@@ -1,6 +1,8 @@
+from gendiff import cli
+
 
 def main():
-    print('Hello!!!')
+    cli.cli()
 
 
 if __name__ == '__main__':
