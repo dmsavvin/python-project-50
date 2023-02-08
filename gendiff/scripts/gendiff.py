@@ -2,7 +2,7 @@ from gendiff import cli
 
 
 def main():
-    cli.cli()
+    cli.run_cli()
 
 
 if __name__ == '__main__':

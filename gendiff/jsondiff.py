@@ -19,29 +19,28 @@ def _get_dict_diff(first_dict: dict, second_dict: dict) -> str:
         The returning string is sorted by "key".
     '''
     all_keys = first_dict.keys() | second_dict.keys()
-    diff = []
+    diff = {}
 
     for key in sorted(all_keys):
         # None == None situation is impossible hence key is in both
         # dicts and value is the same
         if first_dict.get(key) == second_dict.get(key):
-            diff.append(f'  {key}: {first_dict[key]}')
+            diff[f'  {key}'] = first_dict[key]
             continue
 
         # Key is in the first dict and it ether noexist or has different
         # value in the second dict
         if first_dict.get(key) is not None:
-            diff.append(f'- {key}: {first_dict[key]}')
-
+            diff[f'- {key}'] = first_dict[key]
         # Key is in the second dict and it ether noexist or has different
         # value in the first dict
         if second_dict.get(key) is not None:
-            diff.append(f'+ {key}: {second_dict[key]}')
+            diff[f'+ {key}'] = second_dict[key]
 
-    return '\n'.join(diff)
+    return json.dumps(diff, separators=('', ': '), indent=2).replace('"', '')
 
 
-def json_diff(first_file: str, second_file: str) -> str:
+def get_json_diff(first_file: str, second_file: str) -> str:
     '''Compare two json files and show the difference
 
     Args:
