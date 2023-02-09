@@ -1,10 +1,10 @@
 import argparse as ap
 from gendiff.jsondiff import get_json_diff
 
-FORMATS = ['plain', 'json']
+FORMATS = ['json', 'plain']
 
 
-def run_cli():
+def run_cli(argv=None):
     parser = ap.ArgumentParser(
         description='Compares two configuration files and shows a difference.')
     parser.add_argument('-f', '--format', action='store',
@@ -12,7 +12,7 @@ def run_cli():
                         default=FORMATS[0], metavar='FORMAT')
     parser.add_argument('first_file')
     parser.add_argument('second_file')
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     # Do something with the first_file and the second_file
     # print(f'Here we are doing something with the {args.first_file}'
@@ -24,4 +24,4 @@ def run_cli():
 
 
 if __name__ == '__main__':
-    run_cli()
+    run_cli(['-h'])

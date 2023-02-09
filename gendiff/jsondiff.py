@@ -1,5 +1,8 @@
 import json
+import yaml
 from pathlib import Path
+
+YAML = {'.yaml', '.yml'}
 
 
 def _get_dict_diff(first_dict: dict, second_dict: dict) -> str:
@@ -37,7 +40,7 @@ def _get_dict_diff(first_dict: dict, second_dict: dict) -> str:
         if second_dict.get(key) is not None:
             diff[f'+ {key}'] = second_dict[key]
 
-    return json.dumps(diff, separators=('', ': '), indent=2).replace('"', '')
+    return diff
 
 
 def get_json_diff(first_file: str, second_file: str) -> str:
@@ -60,7 +63,16 @@ def get_json_diff(first_file: str, second_file: str) -> str:
     path_to_first_file = Path(first_file)
     path_to_second_file = Path(second_file)
 
-    first_dict = json.load(open(path_to_first_file))
-    second_dict = json.load(open(path_to_second_file))
+    if path_to_first_file.suffix in YAML:
+        first_dict = yaml.safe_load(open(path_to_first_file))
+    else:  # json
+        first_dict = json.load(open(path_to_first_file))
 
-    return _get_dict_diff(first_dict, second_dict)
+    if path_to_second_file.suffix in YAML:
+        second_dict = yaml.safe_load(open(path_to_second_file))
+    else:  # json
+        second_dict = json.load(open(path_to_second_file))
+
+    return json.dumps(_get_dict_diff(first_dict, second_dict),
+                      separators=('', ': '), indent=2
+                      ).replace('"', '')
