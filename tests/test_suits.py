@@ -5,10 +5,6 @@ SECOND_DICT = json.load(open('./tests/fixtures/second.json'))
 DEEP_FIRST_DICT = json.load(open('./tests/fixtures/deep-first.json'))
 DEEP_SECOND_DICT = json.load(open('./tests/fixtures/deep-second.json'))
 
-FIRST_SECOND_DIFF = open('./tests/fixtures/first-second-diff.txt').read()
-DEEP_FIRST_SECOND_DIFF = \
-    open('./tests/fixtures/deep-first-second-diff.txt').read()
-
 CONVERT_JSON_TO_DICT_TS = [
     ('./tests/fixtures/first.json', FIRST_DICT),
     ('./tests/fixtures/first.yaml', FIRST_DICT),
@@ -124,19 +120,23 @@ FORMAT_DIFF_TS = [(_DD_1, _DD_1_STR),
                   (_DD_4, _DD_4_STR)
                   ]
 
+FIRST_SECOND_DIFF = open('./tests/fixtures/first-second-diff.txt').read()
+DEEP_FIRST_SECOND_DIFF = \
+    open('./tests/fixtures/deep-first-second-diff.txt').read()
 
-GET_JSON_DIFF_TS = [(('./tests/fixtures/first.json', './tests/fixtures/second.json'),
-               FIRST_SECOND_DIFF),
-              (('./tests/fixtures/first.yaml', './tests/fixtures/second.yaml'),
-               FIRST_SECOND_DIFF),
-              (('./tests/fixtures/first.yml', './tests/fixtures/second.yml'),
-               FIRST_SECOND_DIFF),
-              (('./tests/fixtures/first.json', './tests/fixtures/second.yaml'),
-               FIRST_SECOND_DIFF),
-              (('./tests/fixtures/first.yaml', './tests/fixtures/second.json'),
-               FIRST_SECOND_DIFF),
-              (('./tests/fixtures/first.json', './tests/fixtures/second.yml'),
-               FIRST_SECOND_DIFF),
-              (('./tests/fixtures/first.yml', './tests/fixtures/second.yaml'),
-               FIRST_SECOND_DIFF)
-              ]
+GET_JSON_DIFF_TS = [
+    (('./tests/fixtures/first.json', './tests/fixtures/second.json'),
+     FIRST_SECOND_DIFF),
+    (('./tests/fixtures/first.yaml', './tests/fixtures/second.yaml'),
+     FIRST_SECOND_DIFF),
+    (('./tests/fixtures/first.yml', './tests/fixtures/second.yml'),
+     FIRST_SECOND_DIFF),
+    (('./tests/fixtures/first.json', './tests/fixtures/second.yaml'),
+     FIRST_SECOND_DIFF),
+    (('./tests/fixtures/first.yaml', './tests/fixtures/second.json'),
+     FIRST_SECOND_DIFF),
+    (('./tests/fixtures/first.json', './tests/fixtures/second.yml'),
+     FIRST_SECOND_DIFF),
+    (('./tests/fixtures/first.yml', './tests/fixtures/second.yaml'),
+     FIRST_SECOND_DIFF)
+]

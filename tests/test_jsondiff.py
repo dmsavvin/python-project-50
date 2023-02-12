@@ -1,6 +1,6 @@
 import pytest
 import gendiff.jsondiff as jd
-import tests.const as ts
+import tests.test_suits as ts
 
 
 @pytest.mark.parametrize("test_input,expected", ts.CONVERT_JSON_TO_DICT_TS)
