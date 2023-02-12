@@ -3,23 +3,31 @@ import yaml
 from pathlib import Path
 
 YAML = {'.yaml', '.yml'}
+CONV_TBL = {'True': 'true',
+            'False': 'false',
+            'None': 'none'
+            }
 
 
-def _get_dict_diff(first_dict: dict, second_dict: dict) -> str:
-    '''Compare two dictionaries and show the difference
+def _convert_json_to_dict(file_name: str) -> dict:
+    path_to_file = Path(file_name)
+    if path_to_file.suffix in YAML:
+        return yaml.safe_load(open(path_to_file))
+    return json.load(open(path_to_file))
 
-    Args:
-        first_dict: first dictionary to be compared
-        second_dict: second dictionary to be compared
 
-    Returns:
-        Multiline string that consists of the following lines:
-        "  key: val" if key is in both dicts and it has the same value "val"
-        "- key: val" if key is in the first dict with the value "val"
-            but noexist or has the different value in the second dict
-        "+ key: val" if key is in the second dict with the value "val"
-            but noexist or has the different value in the first dict
-        The returning string is sorted by "key".
+def _norm_val(val):
+    '''Convert keys of a dict to the ('', key) pairs
+    '''
+    if type(val) is dict:
+        return {('', key): _norm_val(value)
+                for key, value in val.items()
+                }
+    return val
+
+
+def _get_dict_diff(first_dict: dict, second_dict: dict) -> dict:
+    '''Compare two dictionaries and return the difference
     '''
     all_keys = first_dict.keys() | second_dict.keys()
     diff = {}
@@ -28,51 +36,74 @@ def _get_dict_diff(first_dict: dict, second_dict: dict) -> str:
         # None == None situation is impossible hence key is in both
         # dicts and value is the same
         if first_dict.get(key) == second_dict.get(key):
-            diff[f'  {key}'] = first_dict[key]
+            diff[('', key)] = _norm_val(first_dict[key])
             continue
 
-        # Key is in the first dict and it ether noexist or has different
-        # value in the second dict
+        # was non terminal, becomes non terminal
+        if type(fd := first_dict.get(key)) is dict and \
+           type(sd := second_dict.get(key)) is dict:
+            diff[('', key)] = _get_dict_diff(fd, sd)
+            continue
+
+        #                   becomes non existent or
+        # was terminal,     becomes non terminal or
+        # was non terminal, becomes terminal or
+        # was terminal,     becomes terminal but with a different value
         if first_dict.get(key) is not None:
-            diff[f'- {key}'] = first_dict[key]
-        # Key is in the second dict and it ether noexist or has different
-        # value in the first dict
+            diff[('-', key)] = _norm_val(first_dict[key])
+
+        # was non existent or
+        # was terminal,     becomes non terminal or
+        # was non terminal, becomes terminal or
+        # was terminal,     becomes terminal but with a different value
         if second_dict.get(key) is not None:
-            diff[f'+ {key}'] = second_dict[key]
+            diff[('+', key)] = _norm_val(second_dict[key])
 
     return diff
 
 
-def get_json_diff(first_file: str, second_file: str) -> str:
-    '''Compare two json files and show the difference
+def _format_diff(diff, init_ind=0, incr_ind=2, sym_fld_len=2) -> str:
+    '''Convert diff dict to a string
 
     Args:
-        first_file: first file to be compared
-        second_file: second file to be compared
-
-    Returns:
-        Multiline string that consists of the following lines:
-        "  key: val" if key is in the both files and it has the same
-            value "val"
-        "- key: val" if key is in the first file with the value "val"
-            but noexist or has the different value in the second file
-        "+ key: val" if key is in the second file with the value "val"
-            but noexist or has the different value in the first file
-        The returning string is sorted by "key".
+        diff - dict to be converted to a string
+        init_ind - initial part of an indent (use in recursive call to
+            specify the indent of the parent)
+        incr_ind - incremental indent between adjacent levels
+        sym_field_len - length of the field for a symbol before key
+    Example:
+        ......................key1: {
+        |                    |            +...............key2: value 2
+        |                    |            |              |
+        +----init_ind--------+--incr_ind--+--symbol_len--+
     '''
-    path_to_first_file = Path(first_file)
-    path_to_second_file = Path(second_file)
+    indent = init_ind + incr_ind
+    res = []
 
-    if path_to_first_file.suffix in YAML:
-        first_dict = yaml.safe_load(open(path_to_first_file))
-    else:  # json
-        first_dict = json.load(open(path_to_first_file))
+    res.append('{')
 
-    if path_to_second_file.suffix in YAML:
-        second_dict = yaml.safe_load(open(path_to_second_file))
-    else:  # json
-        second_dict = json.load(open(path_to_second_file))
+    for key in diff:
+        value = diff[key]
+        symbol, _key = key
+        if type(value) is dict:
+            res.append(f'{" " * indent}{symbol:<{sym_fld_len}}{_key}: '
+                       f'{_format_diff(value, init_ind=indent+sym_fld_len)}'
+                       )
+        else:
+            value = CONV_TBL[str(value)] if str(value) in CONV_TBL else value
+            res.append(f'{" " * indent}{symbol:<{sym_fld_len}}{_key}: {value}')
 
-    return json.dumps(_get_dict_diff(first_dict, second_dict),
-                      separators=('', ': '), indent=2
-                      ).replace('"', '')
+    res.append(f'{" " * init_ind}' '}')
+
+    return '\n'.join(res)
+
+
+def get_json_diff(first_file_name: str, second_file_name: str) -> str:
+    '''Compare two json files and return the difference
+    '''
+    first_dict = _convert_json_to_dict(first_file_name)
+    second_dict = _convert_json_to_dict(second_file_name)
+
+    diff = _get_dict_diff(first_dict, second_dict)
+
+    return _format_diff(diff)
