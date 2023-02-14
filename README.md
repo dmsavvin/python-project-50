@@ -26,5 +26,5 @@ To use on Linux:
 
 For `FORMAT` the following options are available: `stylish` (default option), `plain`, `json`
 
-See the following asciinema demonstration for installation and using process
+See the following asciinema demonstration for the installation and using process
 [ https://asciinema.org/a/pZflS1EuLwgZz0i72JTcBXQ5q]( https://asciinema.org/a/pZflS1EuLwgZz0i72JTcBXQ5q)
