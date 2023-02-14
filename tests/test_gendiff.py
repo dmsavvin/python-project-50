@@ -3,9 +3,6 @@ import pytest
 import dictdiffer
 import gendiff.gendiff as gd
 import tests.test_suits as ts
-from gendiff.formatters.stylish import get_stylish_diff
-from gendiff.formatters.plain import get_plain_diff
-from gendiff.formatters.fjson import get_json_diff
 
 
 @pytest.mark.parametrize("test_input,expected", ts.CONVERT_JSON_TO_DICT_TS)

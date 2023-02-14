@@ -10,6 +10,7 @@ FORMATTERS = {'stylish': get_stylish_diff,
               'plain': get_plain_diff,
               'json': get_json_diff}
 
+
 def _normalize_unchanged(val):
     '''Convert unchanged parts of the compared dicts to the diff dict format
     '''
