@@ -17,6 +17,30 @@ def _normalize_unchanged(val):
 
 def _get_diff_dict(first_dict: dict, second_dict: dict) -> dict:
     '''Compare two dictionaries and return the difference as a dictionary
+
+    Examples:
+        dict1 = {'a': smth}
+        dict2 = {'a': smth}
+        _get_diff_dict(dict1, dict2) -> {'a': {'': smth}}
+
+        dict1 = {'a': smth}
+        dict2 = {'a': smth different}
+        _get_diff_dict(dict1, dict2) -> {'a': {'-': smth, '+': smth different}}
+
+        dict1 = {'a': smth}
+        dict2 = {'b': smth different}
+        _get_diff_dict(dict1, dict2) -> {'a': {'-': smth},
+                                         'b': {'+': smth different}
+                                         }
+
+        dict1 = {'k': {'a': smth}}
+        dict2 = {'k': {'a': smth different}}
+        _get_diff_dict(dict1, dict2) -> {'k': {'': {'a': {'-': smth,
+                                                          "+": smth different
+                                                          }
+                                                     }
+                                               }
+                                         }
     '''
     first_dict_keys = first_dict.keys()
     second_dict_keys = second_dict.keys()
@@ -62,7 +86,7 @@ def _convert_json_to_dict(file_name: str) -> dict:
 
 
 def gen_diff(first_file: str, second_file: str, formatter) -> str:
-    '''Compare two json/yml files and return the difference in the text format
+    '''Compare two json files and return the difference in the specified format
 
     Args:
         first_file - name of the first json/yaml file to be compared

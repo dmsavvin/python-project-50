@@ -71,6 +71,10 @@ DEEP_FIRST_SECOND_STYLISH_DIFF = \
     open('./tests/fixtures/deep-first-second-stylish-diff.txt').read()
 DEEP_FIRST_SECOND_PLAIN_DIFF = \
     open('./tests/fixtures/deep-first-second-plain-diff.txt').read()
+FIRST_SECOND_JSON_DIFF = \
+    open('./tests/fixtures/first-second-json-diff.json').read()
+DEEP_FIRST_SECOND_JSON_DIFF = \
+    open('./tests/fixtures/deep-first-second-json-diff.json').read()
 
 
 GEN_STYLISH_DIFF_TS = [
@@ -89,4 +93,11 @@ GEN_STYLISH_DIFF_TS = [
 GEN_PLAIN_DIFF_TS = [
     (('./tests/fixtures/deep-first.json', './tests/fixtures/deep-second.json'),
      DEEP_FIRST_SECOND_PLAIN_DIFF)
+]
+
+GEN_JSON_DIFF_TS = [
+    (('./tests/fixtures/deep-first.json', './tests/fixtures/deep-second.json'),
+     DEEP_FIRST_SECOND_JSON_DIFF),
+    (('./tests/fixtures/first.json', './tests/fixtures/second.json'),
+     FIRST_SECOND_JSON_DIFF)
 ]

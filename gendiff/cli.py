@@ -2,11 +2,16 @@ import argparse
 from gendiff.gendiff import gen_diff
 from gendiff.formatters.stylish import get_stylish_diff
 from gendiff.formatters.plain import get_plain_diff
+from gendiff.formatters.fjson import get_json_diff
 
-FORMATS = ['json', 'plain']
+FORMATS = ['stylish', 'plain', 'json']
+FORMATTERS = {'stylish': get_stylish_diff,
+              'plain': get_plain_diff,
+              'json': get_json_diff}
 
 
 def run_cli(argv=None):
+    '''Run command line interface for the gen_diff function'''
     parser = argparse.ArgumentParser(
         description='Compares two configuration files and shows a difference.')
     parser.add_argument('-f', '--format', action='store',
@@ -16,10 +21,7 @@ def run_cli(argv=None):
     parser.add_argument('second_file')
     args = parser.parse_args(argv)
 
-    if args.format == 'json':
-        print(gen_diff(args.first_file, args.second_file, get_stylish_diff))
-    else:
-        print(gen_diff(args.first_file, args.second_file, get_plain_diff))
+    print(gen_diff(args.first_file, args.second_file, FORMATTERS[args.format]))
 
 
 if __name__ == '__main__':
