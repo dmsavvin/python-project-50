@@ -1,5 +1,5 @@
 import argparse
-from gendiff.gendiff import gen_diff
+from gendiff.gendiff import generate_diff
 from gendiff.formatters.stylish import get_stylish_diff
 from gendiff.formatters.plain import get_plain_diff
 from gendiff.formatters.fjson import get_json_diff
@@ -21,7 +21,8 @@ def run_cli(argv=None):
     parser.add_argument('second_file')
     args = parser.parse_args(argv)
 
-    print(gen_diff(args.first_file, args.second_file, FORMATTERS[args.format]))
+    print(generate_diff(args.first_file, args.second_file,
+                        FORMATTERS[args.format]))
 
 
 if __name__ == '__main__':

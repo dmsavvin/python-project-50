@@ -85,7 +85,7 @@ def _convert_json_to_dict(file_name: str) -> dict:
     return json.load(open(path_to_file))
 
 
-def gen_diff(first_file: str, second_file: str, formatter) -> str:
+def generate_diff(first_file: str, second_file: str, formatter) -> str:
     '''Compare two json files and return the difference in the specified format
 
     Args:
