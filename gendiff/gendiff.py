@@ -1,6 +1,7 @@
 import json
 import yaml
 from pathlib import Path
+from gendiff.formatters import stylish
 
 YAML = {'.yaml', '.yml'}
 
@@ -85,7 +86,7 @@ def _convert_json_to_dict(file_name: str) -> dict:
     return json.load(open(path_to_file))
 
 
-def generate_diff(first_file: str, second_file: str, formatter) -> str:
+def generate_diff(first_file: str, second_file: str, formatter=stylish) -> str:
     '''Compare two json files and return the difference in the specified format
 
     Args:
