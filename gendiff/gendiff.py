@@ -2,9 +2,13 @@ import json
 import yaml
 from pathlib import Path
 from gendiff.formatters.stylish import get_stylish_diff
+from gendiff.formatters.plain import get_plain_diff
+from gendiff.formatters.fjson import get_json_diff
 
 YAML = {'.yaml', '.yml'}
-
+FORMATTERS = {'stylish': get_stylish_diff,
+              'plain': get_plain_diff,
+              'json': get_json_diff}
 
 def _normalize_unchanged(val):
     '''Convert unchanged parts of the compared dicts to the diff dict format
@@ -86,17 +90,17 @@ def _convert_json_to_dict(file_name: str) -> dict:
     return json.load(open(path_to_file))
 
 
-def generate_diff(first_file: str, second_file: str, format=get_stylish_diff) -> str:
+def generate_diff(first_file: str, second_file: str, format='stylish') -> str:
     '''Compare two json files and return the difference in the specified format
 
     Args:
         first_file - name of the first json/yaml file to be compared
         second_file - name of the second json/yaml file to be compared
-        format - function used to format the difference report
+        format - format type for the difference report
     '''
     first_dict = _convert_json_to_dict(first_file)
     second_dict = _convert_json_to_dict(second_file)
 
     diff = _get_diff_dict(first_dict, second_dict)
 
-    return format(diff)
+    return FORMATTERS[format](diff)
