@@ -13,14 +13,18 @@
 The project provides functionality to generate difference between two json/yaml files
 
 To install on Linux:
+
 `$ python3 -m pip install --user git+https://github.com/dmsavvin/python-project-50.git`
 
 To use on Linux:
+
 `$ gendiff [-h] [-f FORMAT] first_file second_file`
+
 `-h, --help` show help message
+
 `-f FORMAT, --format FORMAT` set format of output
 
-For `FORMAT` the following options are available: `stylish`, `plain`, `json`
+For `FORMAT` the following options are available: `stylish` (default option), `plain`, `json`
 
 See the following asciinema demonstration for installation and using process
-[https://asciinema.org/a/PLgqLgysYfHaFn0DE9loDLwq6](https://asciinema.org/a/PLgqLgysYfHaFn0DE9loDLwq6)
+[ https://asciinema.org/a/pZflS1EuLwgZz0i72JTcBXQ5q]( https://asciinema.org/a/pZflS1EuLwgZz0i72JTcBXQ5q)
